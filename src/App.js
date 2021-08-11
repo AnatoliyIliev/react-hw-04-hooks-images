@@ -25,32 +25,32 @@ function App() {
     setPage(1);
   };
 
-  async function fetchUpdate() {
-    setLoading(true);
+  // async function fetchUpdate() {
+  //   setLoading(true);
 
-    try {
-      const PixabayImageHins = await PixabayAPI(searchQuery, page);
+  //   try {
+  //     const PixabayImageHins = await PixabayAPI(searchQuery, page);
 
-      setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
+  //     setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
 
-      setPage(page + 1);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
+  //     setPage(page + 1);
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
-  useEffect(() => {
-    if (!searchQuery) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!searchQuery) {
+  //     return;
+  //   }
 
-    setLoading(true);
-    setPixabayImage([]);
+  //   setLoading(true);
+  //   setPixabayImage([]);
 
-    fetchUpdate();
-  }, [fetchUpdate, searchQuery]);
+  //   fetchUpdate();
+  // }, [fetchUpdate, searchQuery]);
 
   const toggleModal = () => {
     const onReversModal = !showModal;
@@ -75,7 +75,7 @@ function App() {
       {loading && <Loading />}
       <ImageGallery PixabayImage={PixabayImage} onClick={isOpenModal} />
       <ToastContainer autoClose={3000} />
-      {LoadMoreButton && <Button onFetch={fetchUpdate} />}
+      {/* {LoadMoreButton && <Button onFetch={fetchUpdate} />} */}
       {showModal && (
         <Modal onClose={toggleModal} onClick={isOpenModal}>
           <img src={url} alt={alt} />

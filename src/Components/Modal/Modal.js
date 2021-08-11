@@ -6,15 +6,15 @@ import styles from './Modal.module.scss';
 const modalRoot = document.querySelector('#modal-root');
 
 function Modal({ onClose, children }) {
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      onClose();
-    }
-  };
+  // const handleKeyDown = e => {
+  //   if (e.code === 'Escape') {
+  //     onClose();
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleKeyDown);
+  // }, [handleKeyDown]);
 
   // useEffect(() => {
   //   window.addEventListener('keydown', handleKeyDown);
