@@ -9,14 +9,6 @@ function Button({ onFetch }) {
     });
   }, [onFetch]);
 
-  // ПОМЕНЯТЬ---------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-  // const componentDidMount = () = > {
-  //   window.scrollTo({
-  //     top: document.documentElement.scrollHeight,
-  //     behavior: 'smooth',
-  //   });
-  // }
-
   return (
     <div className={styles.Center}>
       <button type="button" className={styles.Button} onClick={onFetch}>

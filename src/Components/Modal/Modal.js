@@ -6,28 +6,18 @@ import styles from './Modal.module.scss';
 const modalRoot = document.querySelector('#modal-root');
 
 function Modal({ onClose, children }) {
-  // const handleKeyDown = e => {
-  //   if (e.code === 'Escape') {
-  //     onClose();
-  //   }
-  // };
+  const handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      onClose();
+    }
+  };
 
-  // useEffect(() => {
-  //   window.addEventListener('keydown', handleKeyDown);
-  // }, [handleKeyDown]);
-
-  // useEffect(() => {
-  //   window.addEventListener('keydown', handleKeyDown);
-  // }, [handleKeyDown]);
-
-  // ПОМЕНЯТЬ---------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-  // componentDidMount() {
-  //   window.addEventListener('keydown', handleKeyDown);
-  // }
-  // ПОМЕНЯТЬ---------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-  // componentWillUnmount() {
-  //   window.removeEventListener('keydown', handleKeyDown);
-  // }
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   const handleBackdropClick = event => {
     if (event.currentTarget === event.target) {

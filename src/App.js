@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.module.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,7 +7,7 @@ import Button from './Components/Button';
 import Loading from './Components/Loader';
 import Searchbar from './Components/Searchbar';
 import ImageGallery from './Components/ImageGallery';
-import Modal from './Components/Modal';
+// import Modal from './Components/Modal';
 
 function App() {
   const [PixabayImage, setPixabayImage] = useState([]);
@@ -15,56 +15,61 @@ function App() {
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   // const [activeId, setActiveId] = useState(null);
-  const [alt, setAlt] = useState('');
-  const [url, setUrl] = useState('');
+  // const [alt, setAlt] = useState('');
+  // const [url, setUrl] = useState('');
+
+  // const onReversModal = useRef(showModal);
+  const onLoading = useRef(loading);
 
   const submitForm = searchQuery => {
+    console.log('searchQuery', searchQuery);
+
     setSearchQuery(searchQuery);
     setPage(1);
   };
 
-  // async function fetchUpdate() {
-  //   setLoading(true);
+  useEffect(() => {
+    if (!searchQuery) {
+      console.log('if', searchQuery);
+      return;
+    }
 
-  //   try {
-  //     const PixabayImageHins = await PixabayAPI(searchQuery, page);
+    setLoading(!onLoading.current);
+    // setPixabayImage([]);
+    // const fetchUpdate = async () => {
 
-  //     setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
+    async function fetchUpdate() {
+      try {
+        const PixabayImageHins = await PixabayAPI(searchQuery, page);
+        setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
+        // setPage(page => page + 1);
+        console.log('try', searchQuery);
+      } catch (error) {
+        console.log('сработал error');
+        setError(error.message);
+      } finally {
+        console.log('сработал finally');
+        setLoading(onLoading.current);
+        // setSearchQuery([]);
+      }
+    }
+    fetchUpdate();
+    // setSearchQuery([]);
+  }, [searchQuery, page, PixabayImage]);
 
-  //     setPage(page + 1);
-  //   } catch (error) {
-  //     setError(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
+  // const toggleModal = () => {
+  //   setShowModal(!onReversModal.current);
+  // };
 
-  // useEffect(() => {
-  //   if (!searchQuery) {
-  //     return;
-  //   }
+  // const isOpenModal = event => {
+  //   // setActiveId(event.target.id);
+  //   setAlt(event.target.alt);
+  //   setUrl(event.target.attributes.url.nodeValue);
 
-  //   setLoading(true);
-  //   setPixabayImage([]);
-
-  //   fetchUpdate();
-  // }, [fetchUpdate, searchQuery]);
-
-  const toggleModal = () => {
-    const onReversModal = !showModal;
-
-    setShowModal(onReversModal);
-  };
-
-  const isOpenModal = event => {
-    // setActiveId(event.target.id);
-    setAlt(event.target.alt);
-    setUrl(event.target.attributes.url.nodeValue);
-
-    toggleModal();
-  };
+  //   toggleModal();
+  // };
 
   const LoadMoreButton = !(PixabayImage.length < 12) && !loading;
 
@@ -73,14 +78,17 @@ function App() {
       <Searchbar onSubmit={submitForm} />
       {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
       {loading && <Loading />}
-      <ImageGallery PixabayImage={PixabayImage} onClick={isOpenModal} />
+      <ImageGallery
+        PixabayImage={PixabayImage}
+        // onClick={isOpenModal}
+      />
       <ToastContainer autoClose={3000} />
-      {/* {LoadMoreButton && <Button onFetch={fetchUpdate} />} */}
-      {showModal && (
+      {LoadMoreButton && <Button onFetch={searchQuery} />}
+      {/* {showModal && (
         <Modal onClose={toggleModal} onClick={isOpenModal}>
           <img src={url} alt={alt} />
         </Modal>
-      )}
+      )} */}
     </div>
   );
 }
