@@ -11,7 +11,7 @@ function Button({ onFetch }) {
 
   return (
     <div className={styles.Center}>
-      <button type="button" className={styles.Button} onClick={onFetch}>
+      <button type="button" className={styles.Button} onClick={() => onFetch}>
         Load more
       </button>
     </div>

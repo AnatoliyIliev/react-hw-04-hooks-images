@@ -8,6 +8,7 @@ const modalRoot = document.querySelector('#modal-root');
 function Modal({ onClose, children }) {
   const handleKeyDown = e => {
     if (e.code === 'Escape') {
+      console.log('handleKeyDown', onClose());
       onClose();
     }
   };
@@ -21,6 +22,7 @@ function Modal({ onClose, children }) {
 
   const handleBackdropClick = event => {
     if (event.currentTarget === event.target) {
+      console.log('handleBackdropClick', onClose());
       onClose();
     }
   };

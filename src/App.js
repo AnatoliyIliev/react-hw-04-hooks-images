@@ -7,7 +7,7 @@ import Button from './Components/Button';
 import Loading from './Components/Loader';
 import Searchbar from './Components/Searchbar';
 import ImageGallery from './Components/ImageGallery';
-// import Modal from './Components/Modal';
+import Modal from './Components/Modal';
 
 function App() {
   const [PixabayImage, setPixabayImage] = useState([]);
@@ -15,12 +15,12 @@ function App() {
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   // const [activeId, setActiveId] = useState(null);
-  // const [alt, setAlt] = useState('');
-  // const [url, setUrl] = useState('');
+  const [alt, setAlt] = useState('');
+  const [url, setUrl] = useState('');
 
-  // const onReversModal = useRef(showModal);
+  const onReversModal = useRef(showModal);
   const onLoading = useRef(loading);
 
   const submitForm = searchQuery => {
@@ -37,7 +37,7 @@ function App() {
     }
 
     setLoading(!onLoading.current);
-    // setPixabayImage([]);
+    setPixabayImage([]);
 
     PixabayAPI.fetchImages(searchQuery, page)
       .then(PixabayImageHins =>
@@ -48,49 +48,23 @@ function App() {
         console.log('сработал finally');
         setLoading(onLoading.current);
       });
-    // setSearchQuery([]);
   }, [searchQuery, page]);
 
-  // useEffect(() => {
-  //   if (!searchQuery) {
-  //     console.log('if', searchQuery);
-  //     return;
-  //   }
+  const toggleModal = () => {
+    setShowModal(!onReversModal.current);
+    console.log('toggleModal', showModal);
+    return showModal;
+  };
 
-  //   setLoading(!onLoading.current);
-  //   // setPixabayImage([]);
-  //   // const fetchUpdate = async () => {
+  const isOpenModal = event => {
+    // setActiveId(event.target.id);
+    setAlt(event.target.alt);
+    setUrl(event.target.attributes.url.nodeValue);
 
-  //   async function fetchUpdate() {
-  //     try {
-  //       const PixabayImageHins = await PixabayAPI(searchQuery, page);
-  //       setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
-  //       // setPage(page => page + 1);
-  //       console.log('try', searchQuery);
-  //     } catch (error) {
-  //       console.log('сработал error');
-  //       setError(error.message);
-  //     } finally {
-  //       console.log('сработал finally');
-  //       setLoading(onLoading.current);
-  //       // setSearchQuery([]);
-  //     }
-  //   }
-  //   fetchUpdate();
-  //   // setSearchQuery([]);
-  // }, [searchQuery, page, PixabayImage]);
+    console.log('isOpenModal', toggleModal());
 
-  // const toggleModal = () => {
-  //   setShowModal(!onReversModal.current);
-  // };
-
-  // const isOpenModal = event => {
-  //   // setActiveId(event.target.id);
-  //   setAlt(event.target.alt);
-  //   setUrl(event.target.attributes.url.nodeValue);
-
-  //   toggleModal();
-  // };
+    toggleModal();
+  };
 
   const LoadMoreButton = !(PixabayImage.length < 12) && !loading;
 
@@ -99,17 +73,14 @@ function App() {
       <Searchbar onSubmit={submitForm} />
       {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
       {loading && <Loading />}
-      <ImageGallery
-        PixabayImage={PixabayImage}
-        // onClick={isOpenModal}
-      />
+      <ImageGallery PixabayImage={PixabayImage} onClick={isOpenModal} />
       <ToastContainer autoClose={3000} />
       {LoadMoreButton && <Button onFetch={searchQuery} />}
-      {/* {showModal && (
+      {showModal && (
         <Modal onClose={toggleModal} onClick={isOpenModal}>
           <img src={url} alt={alt} />
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }
