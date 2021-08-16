@@ -6,23 +6,26 @@ import styles from './Modal.module.scss';
 const modalRoot = document.querySelector('#modal-root');
 
 function Modal({ onClose, children }) {
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    console.log('addEventListener');
+  });
+
+  useEffect(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+    console.log('removeEventListener');
+  });
+
   const handleKeyDown = e => {
+    console.log('handleKeyDown', e);
     if (e.code === 'Escape') {
-      console.log('handleKeyDown', onClose());
       onClose();
     }
   };
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [handleKeyDown]);
-
   const handleBackdropClick = event => {
+    // console.log("handleBackdropClick", event)
     if (event.currentTarget === event.target) {
-      console.log('handleBackdropClick', onClose());
       onClose();
     }
   };

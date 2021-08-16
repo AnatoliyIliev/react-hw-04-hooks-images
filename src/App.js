@@ -20,40 +20,43 @@ function App() {
   const [alt, setAlt] = useState('');
   const [url, setUrl] = useState('');
 
-  const onReversModal = useRef(showModal);
+  // const onReversModal = useRef(showModal);
   const onLoading = useRef(loading);
 
   const submitForm = searchQuery => {
-    console.log('searchQuery', searchQuery);
-
+    // console.log('searchQuery', searchQuery);
+    console.log('searchQuery', page);
     setSearchQuery(searchQuery);
+    setPixabayImage([]);
     setPage(1);
   };
 
   useEffect(() => {
     if (!searchQuery) {
-      console.log('if', searchQuery);
       return;
     }
+    fetchUpdate();
+  }, [searchQuery]);
 
+  const fetchUpdate = () => {
     setLoading(!onLoading.current);
-    setPixabayImage([]);
 
     PixabayAPI.fetchImages(searchQuery, page)
-      .then(PixabayImageHins =>
-        setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]),
-      )
+      .then(PixabayImageHins => {
+        setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
+        setPage(prevPage => prevPage + 1);
+        console.log('fetchUpdate', page);
+      })
       .catch(error => setError(error.message))
       .finally(() => {
         console.log('сработал finally');
         setLoading(onLoading.current);
       });
-  }, [searchQuery, page]);
+  };
 
   const toggleModal = () => {
-    setShowModal(!onReversModal.current);
+    setShowModal(!showModal);
     console.log('toggleModal', showModal);
-    return showModal;
   };
 
   const isOpenModal = event => {
@@ -61,9 +64,10 @@ function App() {
     setAlt(event.target.alt);
     setUrl(event.target.attributes.url.nodeValue);
 
-    console.log('isOpenModal', toggleModal());
+    console.log('isOpenModal', showModal);
+    setLoading(onLoading.current);
 
-    toggleModal();
+    toggleModal(false);
   };
 
   const LoadMoreButton = !(PixabayImage.length < 12) && !loading;
@@ -75,7 +79,7 @@ function App() {
       {loading && <Loading />}
       <ImageGallery PixabayImage={PixabayImage} onClick={isOpenModal} />
       <ToastContainer autoClose={3000} />
-      {LoadMoreButton && <Button onFetch={searchQuery} />}
+      {LoadMoreButton && <Button onFetch={fetchUpdate} />}
       {showModal && (
         <Modal onClose={toggleModal} onClick={isOpenModal}>
           <img src={url} alt={alt} />
