@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './App.module.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { PixabayAPI } from './services/PixabayAPI';
+import PixabayAPI from './services/PixabayAPI';
 import Button from './Components/Button';
 import Loading from './Components/Loader';
 import Searchbar from './Components/Searchbar';
@@ -38,26 +38,47 @@ function App() {
 
     setLoading(!onLoading.current);
     // setPixabayImage([]);
-    // const fetchUpdate = async () => {
 
-    async function fetchUpdate() {
-      try {
-        const PixabayImageHins = await PixabayAPI(searchQuery, page);
-        setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
-        // setPage(page => page + 1);
-        console.log('try', searchQuery);
-      } catch (error) {
-        console.log('сработал error');
-        setError(error.message);
-      } finally {
+    PixabayAPI.fetchImages(searchQuery, page)
+      .then(PixabayImageHins =>
+        setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]),
+      )
+      .catch(error => setError(error.message))
+      .finally(() => {
         console.log('сработал finally');
         setLoading(onLoading.current);
-        // setSearchQuery([]);
-      }
-    }
-    fetchUpdate();
+      });
     // setSearchQuery([]);
-  }, [searchQuery, page, PixabayImage]);
+  }, [searchQuery, page]);
+
+  // useEffect(() => {
+  //   if (!searchQuery) {
+  //     console.log('if', searchQuery);
+  //     return;
+  //   }
+
+  //   setLoading(!onLoading.current);
+  //   // setPixabayImage([]);
+  //   // const fetchUpdate = async () => {
+
+  //   async function fetchUpdate() {
+  //     try {
+  //       const PixabayImageHins = await PixabayAPI(searchQuery, page);
+  //       setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
+  //       // setPage(page => page + 1);
+  //       console.log('try', searchQuery);
+  //     } catch (error) {
+  //       console.log('сработал error');
+  //       setError(error.message);
+  //     } finally {
+  //       console.log('сработал finally');
+  //       setLoading(onLoading.current);
+  //       // setSearchQuery([]);
+  //     }
+  //   }
+  //   fetchUpdate();
+  //   // setSearchQuery([]);
+  // }, [searchQuery, page, PixabayImage]);
 
   // const toggleModal = () => {
   //   setShowModal(!onReversModal.current);
