@@ -16,16 +16,12 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  // const [activeId, setActiveId] = useState(null);
   const [alt, setAlt] = useState('');
   const [url, setUrl] = useState('');
 
-  // const onReversModal = useRef(showModal);
   const onLoading = useRef(loading);
 
   const submitForm = searchQuery => {
-    // console.log('searchQuery', searchQuery);
-    console.log('searchQuery', page);
     setSearchQuery(searchQuery);
     setPixabayImage([]);
     setPage(1);
@@ -36,6 +32,7 @@ function App() {
       return;
     }
     fetchUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const fetchUpdate = () => {
@@ -45,26 +42,20 @@ function App() {
       .then(PixabayImageHins => {
         setPixabayImage([...PixabayImage, ...PixabayImageHins.hits]);
         setPage(prevPage => prevPage + 1);
-        console.log('fetchUpdate', page);
       })
-      .catch(error => setError(error.message))
+      .catch(() => setError(`Поиск ${searchQuery} не дал результата`))
       .finally(() => {
-        console.log('сработал finally');
         setLoading(onLoading.current);
       });
   };
 
   const toggleModal = () => {
     setShowModal(!showModal);
-    console.log('toggleModal', showModal);
   };
 
   const isOpenModal = event => {
-    // setActiveId(event.target.id);
     setAlt(event.target.alt);
     setUrl(event.target.attributes.url.nodeValue);
-
-    console.log('isOpenModal', showModal);
     setLoading(onLoading.current);
 
     toggleModal(false);
